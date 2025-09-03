@@ -9,7 +9,12 @@
 name: Make Passwall run files
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:   # 手动触发
+  schedule:
+    - cron: "0 18 * * *"   # 每天 UTC 18:00 -> 北京时间次日 02:00
+
+permissions:
+  contents: write  # 允许创建/更新 Release 与上传资产
 
 jobs:
   build:
@@ -53,7 +58,7 @@ jobs:
 
       - name: Create install.sh scripts
         run: |
-          cat <<EOF > passwall_x86_64/install.sh
+          cat <<'EOF' > passwall_x86_64/install.sh
           #!/bin/sh
           opkg update
           if [ $? -ne 0 ]; then
